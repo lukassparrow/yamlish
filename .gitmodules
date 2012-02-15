@@ -1,0 +1,3 @@
+[submodule "yamlish.js"]
+	path = yamlish.js
+	url = git://github.com/isaacs/yamlish.git

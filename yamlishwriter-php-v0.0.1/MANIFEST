@@ -1,0 +1,10 @@
+./Changes
+./dist.sh
+./lib/yamlishwriter.php
+./Makefile
+./README
+./t/00-load.php
+./t/10-writer.php
+./t/harness.t
+./t/lib/TestLite.php
+./MANIFEST
