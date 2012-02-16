@@ -3,6 +3,8 @@
 import yaml
 import pprint
 
+__version__ = "0.1"
+
 IN = """
 ---
 bill-to:
@@ -72,6 +74,11 @@ class Reader(object):
     def read(self, source):
         pass
 
+class Writer(object):
+    def __init__(self):
+        pass
+
+    def write(self, source, destination):
+        pass
+
 #print yaml.dump(OUT, canonical=False, default_flow_style=False, default_style=False)
-def read():
-    pass

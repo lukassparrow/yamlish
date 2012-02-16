@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, print_function, unicode_literals
 import logging
 import unittest
 import yamlish
+logging.basicConfig(format='%(levelname)s:%(funcName)s:%(message)s',
+    level=logging.INFO)
 
 IN = """
   ---
@@ -87,7 +90,7 @@ class TestInput(unittest.TestCase):
         for src in source:
           name = src['name']
           yaml = yamlish.Reader()
-          self.assert_(True, "$name: Created")
+          self.assert_(True, "%s: Created" % name)
           self.assert_(isinstance(yaml, yamlish.Reader))
 
           #my $got = eval { $yaml -> read($src -> {source}) };
@@ -97,6 +100,3 @@ class TestInput(unittest.TestCase):
           
           observed = %s
           """ % (name, OUT, got))
-
-if __name__ == "__main__":
-    unittest.main()

@@ -1,11 +1,17 @@
 import unittest
-import load, input, reader, output, writer
+import test_load
+import test_input
+#import test_reader
+import test_output
+#import test_writer
 
-add_tests_from_class = unittest.TestLoader().loadTestsFromTestCase
+if __name__ == "__main__":
+    loader = unittest.TestLoader()
+    suite = loader.loadTestsFromModule(test_load)
+    suite.addTests(loader.loadTestsFromModule(test_input))
+    #suite.addTests(loader.loadTestsFromModule(test_reader))
+    suite.addTests(loader.loadTestsFromModule(test_output))
+    #suite.addTests(loader.loadTestsFromModule(test_writer))
 
-suite = unittest.TestSuite()
-suite.addTest(add_tests_from_class(load.TestBasics))
-suite.addTest(add_tests_from_class(TestHappyPath))
-suite.addTest(add_tests_from_class(TestBadPath))
-suite.addTest(add_tests_from_class(TestPiglitData))
-suite.addTest(add_tests_from_class(TestMainArgsMgmt))
+    runner = unittest.TextTestRunner(verbosity=2)
+    result = runner.run(suite)
