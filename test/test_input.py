@@ -88,15 +88,18 @@ class TestInput(unittest.TestCase):
         ]
 
         for src in source:
-          name = src['name']
-          yaml = yamlish.Reader()
-          self.assert_(True, "%s: Created" % name)
-          self.assert_(isinstance(yaml, yamlish.Reader))
+            name = src['name']
+            yaml = yamlish.Reader()
+            self.assert_(True, "%s: Created" % name)
+            self.assert_(isinstance(yaml, yamlish.Reader))
 
-          #my $got = eval { $yaml -> read($src -> {source}) };
-          got = yaml.read(src['source'])
-          self.assertEqual(got, OUT, """%s: Result matches
-          expected = %s
-          
-          observed = %s
-          """ % (name, OUT, got))
+            #my $got = eval { $yaml -> read($src -> {source}) };
+            try:
+                got = yaml.read(src['source'])
+            except IOError: # FIXME not sure which one
+                raise
+            self.assertEqual(got, OUT, """%s: Result matches
+            expected = %s
+            
+            observed = %s
+            """ % (name, OUT, got))

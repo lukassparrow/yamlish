@@ -71,6 +71,9 @@ class Reader(object):
     def __init__(self):
         pass
 
+    def get_raw(self):
+        pass
+
     def read(self, source):
         pass
 
