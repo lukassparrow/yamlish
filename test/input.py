@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
+import logging
 import unittest
+import yamlish
 
 IN = """
   ---
@@ -66,38 +68,35 @@ OUT = {
 class TestInput(unittest.TestCase):
     """FIXME description of this class"""
     def test_reader(self):
-        #my @lines = @$in;
-        #my $scalar = join("\n", @lines) . "\n";
-        #
-        #my @source = (
-        #  {
-        #    name= > 'Array reference',
-        #    source= > $in,
-        #  },
-        #  {
-        #    name= > 'Closure',
-        #    source= > sub { shift @lines },
-        #  },
-        #  {
-        #    name= > 'Scalar',
-        #    source= > $scalar,
-        #  },
-        #  {
-        #    name= > 'Scalar ref',
-        #    source= > \$scalar,
-        #  },
-        #);
-        #
-        #for my $src (@source) {
-        #  my $name = $src -> {name};
-        #  ok my $yaml = Data::YAML::Reader -> new, "$name: Created";
-        #  isa_ok $yaml, 'Data::YAML::Reader';
-        #
-        #  my $got = eval { $yaml -> read($src -> {source}) };
-        #  unless (is_deeply $got, $out, "$name: Result matches") {
-        #    local $Data::Dumper::Useqq = $Data::Dumper::Useqq = 1;
-        #    diag(Data::Dumper -> Dump([$got], ['$got']));
-        #    diag(Data::Dumper -> Dump([$out], ['$expected']));
-        #  }
-        #}
-        pass
+        scalar = IN
+        source = [
+          {
+            "name": 'Array reference',
+            "source": IN.split("\n"),
+          },
+#          {
+#            "name": 'Closure',
+#            "source": sub { shift @lines },
+#          },
+          {
+            "name": 'Scalar',
+            "source": IN,
+          }
+        ]
+
+        for src in source:
+          name = src['name']
+          yaml = yamlish.Reader()
+          self.assert_(True, "$name: Created")
+          self.assert_(isinstance(yaml, yamlish.Reader))
+
+          #my $got = eval { $yaml -> read($src -> {source}) };
+          got = yaml.read(src['source'])
+          self.assertEqual(got, OUT, """%s: Result matches
+          expected = %s
+          
+          observed = %s
+          """ % (name, OUT, got))
+
+if __name__ == "__main__":
+    unittest.main()

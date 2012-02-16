@@ -1,2 +1,3 @@
 *.py[ocw]
 *~
+pyyaml/upstream-repo/
