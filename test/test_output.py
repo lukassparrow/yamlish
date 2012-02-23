@@ -3,7 +3,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import re
 import unittest
 import yamlish
-from . import TODO
+import yaml
 
 OUT = [
   "---",
@@ -74,7 +74,7 @@ destination = [
   {
     "name": 'Array reference',
     "destination": buf1,
-    "normalise": (lambda x: buf1),
+    "normalise": (lambda : buf1),
   },
 #  {
 #    "name": 'Closure',
@@ -89,15 +89,11 @@ destination = [
 ]
 
 class TestOuptut(unittest.TestCase):
-    @TODO
     def test_output(self):
         for dest in destination:
             name = dest['name']
-            yaml = yamlish.Writer()
-            self.assert_(True, "%s: Created" % name)
-            self.assert_(isinstance(yaml, yamlish.Writer))
 
-            yaml.write(IN, dest[destination])
+            yaml.dump(IN, dest)
             got = dest['normalise']()
 
             self.assertEqual(got, OUT, """%s: Result matches

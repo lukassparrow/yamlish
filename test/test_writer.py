@@ -4,7 +4,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import unittest
 import yamlish
 
-SCHEDULE = [
+test_data_list = [
   {
     "name": 'Simple scalar',
     "in": 1,
@@ -138,50 +138,30 @@ SCHEDULE = [
   },
 ]
 
-# plan(tests = len(SCHEDULE) * 5)
+# plan(tests = len(test_data_list) * 5)
 
 class TestWriter(unittest.TestCase):
     def test_writer(self):
-        for test in SCHEDULE:
+        for test in test_data_list:
             name = test['name']
-            yaml = yamlish.Writer()
-            self.assert_(True, "%s: Created" % name)
-            self.assert_(isinstance(yaml, yamlish.Writer))
-
-            got = []
             data = test['in']
 
-            try:
-                yaml.write(data, got)
-            except Exception as exc:
-                dollar_at = exc
-                raise
-
-            # FIXME just to say ... THERE IS NO 'error' key in SCHEDULE!!!
-            err = test['error']
-            if err:
-                if not err.search(dollar_at): # FIXME $@ (or dollar_at) is described
-                    # in perlvar(1) the error status of the last eval(), which
-                    # means that yaml.read(test['in'])
-                    # if everything is alright, then it is None
-                    self.assertFalse("%s: Error message" % name)
-                    raise Exception(dollar_at)
-                self.assert_(not got, "%s: No result" % name)
+            got = []
+            # We currently don't throw any exceptions in Writer, so this
+            # this is always false
+            if 'error' in test:
+                self.assertRaises(test['error'], yamlish.write, test['in'])
             else:
                 want = test['out']
-                self.assert_(not dollar_at, "%s: No error\n%s" % (name, dollar_at))
-
+                yamlish.write(test['in'], got)
                 self.assertEqual(got, want, """%s: Result matches
                     expected = %s
                     
                     observed = %s
                     """ % (name, want, got))
 
-                yr = yamlish.Reader()
-
                 # Now try parsing it
-                parsed = yr.read(got) # FIXME got has an iterator
-
+                parsed = yamlish.load(got) # FIXME got has an iterator
                 self.assertEqual(parsed, data, """%s: Reparse OK
                     expected = %s
                     

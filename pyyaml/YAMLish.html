@@ -1,0 +1,353 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr" lang="en"><head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+				<meta name="keywords" content="YAMLish,TAP::Parser,TAP diagnostic syntax">
+		<link rel="shortcut icon" href="http://testanything.org/favicon.ico">
+		<link rel="search" type="application/opensearchdescription+xml" href="http://testanything.org/wiki/opensearch_desc.php" title="Test Anything Protocol (English)">
+		<link title="Creative Commons" type="application/rdf+xml" href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=creativecommons" rel="meta">
+		<link rel="copyright" href="http://www.gnu.org/copyleft/fdl.html">
+		<title>YAMLish - Test Anything Protocol</title>
+		<style type="text/css" media="screen,projection">/*<![CDATA[*/ @import "/wiki/skins/monobook/main.css?63"; /*]]>*/</style>
+		<link rel="stylesheet" type="text/css" media="print" href="YAMLish_files/commonPrint.css">
+		<link rel="stylesheet" type="text/css" media="handheld" href="YAMLish_files/handheld.css">
+		<!--[if lt IE 5.5000]><style type="text/css">@import "/wiki/skins/monobook/IE50Fixes.css?63";</style><![endif]-->
+		<!--[if IE 5.5000]><style type="text/css">@import "/wiki/skins/monobook/IE55Fixes.css?63";</style><![endif]-->
+		<!--[if IE 6]><style type="text/css">@import "/wiki/skins/monobook/IE60Fixes.css?63";</style><![endif]-->
+		<!--[if IE 7]><style type="text/css">@import "/wiki/skins/monobook/IE70Fixes.css?63";</style><![endif]-->
+		<!--[if lt IE 7]><script type="text/javascript" src="/wiki/skins/common/IEFixes.js?63"></script>
+		<meta http-equiv="imagetoolbar" content="no" /><![endif]-->
+		
+		<script type="text/javascript">/*<![CDATA[*/
+var skin = "monobook";
+var stylepath = "/wiki/skins";
+var wgArticlePath = "/wiki/index.php/$1";
+var wgScriptPath = "/wiki";
+var wgServer = "http://testanything.org";
+var wgCanonicalNamespace = "";
+var wgCanonicalSpecialPageName = false;
+var wgNamespaceNumber = 0;
+var wgPageName = "YAMLish";
+var wgTitle = "YAMLish";
+var wgAction = "view";
+var wgArticleId = "1384";
+var wgIsArticle = true;
+var wgUserName = null;
+var wgUserGroups = null;
+var wgUserLanguage = "en";
+var wgContentLanguage = "en";
+var wgBreakFrames = false;
+var wgCurRevisionId = "2084";
+/*]]>*/</script>
+                
+		<script type="text/javascript" src="YAMLish_files/wikibits.js"><!-- wikibits js --></script>
+		<script type="text/javascript" src="YAMLish_files/index.js"><!-- site js --></script>
+		<style type="text/css">/*<![CDATA[*/
+@import "/wiki/index.php?title=MediaWiki:Common.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+@import "/wiki/index.php?title=MediaWiki:Monobook.css&usemsgcache=yes&action=raw&ctype=text/css&smaxage=18000";
+@import "/wiki/index.php?title=-&action=raw&gen=css&maxage=18000";
+/*]]>*/</style>
+		<!-- Head Scripts -->
+	</head>
+<body class="mediawiki ns-0 ltr page-YAMLish">
+	<div id="globalWrapper">
+		<div id="column-content">
+	<div id="content">
+		<a name="top" id="top"></a>
+				<h1 class="firstHeading">YAMLish</h1>
+		<div id="bodyContent">
+			<h3 id="siteSub">From Test Anything Protocol</h3>
+			<div id="contentSub"></div>
+									<div id="jump-to-nav">Jump to: <a href="#column-one">navigation</a>, <a href="#searchInput">search</a></div>			<!-- start content -->
+			<p>YAMLish is a small subset of YAML that TAP producers may use to embed machine readable information in TAP diagnostics. See <a href="http://testanything.org/wiki/index.php/TAP_diagnostic_syntax" title="TAP diagnostic syntax">TAP diagnostic syntax</a> for information about how YAMLish embeds in TAP. 
+</p>
+<table id="toc" class="toc" summary="Contents"><tbody><tr><td><div id="toctitle"><h2>Contents</h2></div>
+<ul>
+<li class="toclevel-1"><a href="#Objectives"><span class="tocnumber">1</span> <span class="toctext">Objectives</span></a></li>
+<li class="toclevel-1"><a href="#Syntax"><span class="tocnumber">2</span> <span class="toctext">Syntax</span></a></li>
+<li class="toclevel-1"><a href="#Root_Namespace"><span class="tocnumber">3</span> <span class="toctext">Root Namespace</span></a></li>
+<li class="toclevel-1"><a href="#Implementations"><span class="tocnumber">4</span> <span class="toctext">Implementations</span></a>
+<ul>
+<li class="toclevel-2"><a href="#Perl"><span class="tocnumber">4.1</span> <span class="toctext">Perl</span></a></li>
+<li class="toclevel-2"><a href="#PHP"><span class="tocnumber">4.2</span> <span class="toctext">PHP</span></a></li>
+</ul>
+</li>
+<li class="toclevel-1"><a href="#Q.26A"><span class="tocnumber">5</span> <span class="toctext">Q&amp;A</span></a>
+<ul>
+<li class="toclevel-2"><a href="#Why_YAML.3F"><span class="tocnumber">5.1</span> <span class="toctext">Why YAML?</span></a></li>
+<li class="toclevel-2"><a href="#Why_not_JSON.3F"><span class="tocnumber">5.2</span> <span class="toctext">Why not JSON?</span></a></li>
+<li class="toclevel-2"><a href="#Why_the_---_and_..._markers.3F"><span class="tocnumber">5.3</span> <span class="toctext">Why the --- and ... markers?</span></a></li>
+</ul>
+</li>
+</ul>
+</td></tr></tbody></table><script type="text/javascript"> if (window.showTocToggle) { var tocShowText = "show"; var tocHideText = "hide"; showTocToggle(); } </script>
+<a name="Objectives"></a><h2><span class="editsection">[<a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit&amp;section=1" title="Edit section: Objectives">edit</a>]</span> <span class="mw-headline"> Objectives </span></h2>
+<p>The main objectives for YAMLish are
+</p>
+<ul><li> small - the Perl reader is around 124 lines, 258 lines for the parser
+</li><li> portable - it should be reasonably easy to implement YAMLish in any language
+</li><li> able to encode arbitrary data structures
+</li><li> verifiable - it should be relatively to easy to test that a YAMLish implementation conforms
+</li><li> JSON compatible - YAMLish should be a super-set of JSON to 
+allow TAP producers to make use of JSON libraries (objective not met)
+</li></ul>
+<a name="Syntax"></a><h2><span class="editsection">[<a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit&amp;section=2" title="Edit section: Syntax">edit</a>]</span> <span class="mw-headline"> Syntax </span></h2>
+<p>To avoid the burden of distributing a complete YAML parser with a TAP
+ producer or consumer YAMLish confines itself to a subset of YAML 
+syntax.
+</p><p>These examples demonstrates the supported syntax.
+</p><p>All YAMLish documents must begin with '---' and end with a line containing '...'.
+</p>
+<pre>   --- Simple scalar
+   ...
+</pre>
+<p>Unprintable characters are represented using standard escapes in double quoted strings.
+</p>
+<pre>   --- "\t\x01\x02\n"
+   ...
+</pre>
+<p>Array and hashes are represented thusly
+</p>
+<pre>   ---
+     - "This"
+     - "is"
+     - "an"
+     - "array"
+   ...
+</pre>
+<pre>   ---
+     This: is
+     a: hash
+   ...
+</pre>
+<p>Hash keys may be double quoted strings and may contain unprintable characters
+</p>
+<pre>   ---
+     "\t\x00": "My key is &lt;tab&gt;&lt;nul&gt;"
+     "Now is the time": "t'was ever thus"
+   ...
+   
+</pre>
+<p>Structures may nest arbitrarily
+</p>
+<pre>   ---
+     -
+       name: 'Hash one'
+       value: 1
+     -
+       name: 'Hash two'
+       value: 2
+   ...
+</pre>
+<p>Undef is a tilde
+</p>
+<pre>   --- ~
+   ...
+</pre>
+<a name="Root_Namespace"></a><h2><span class="editsection">[<a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit&amp;section=3" title="Edit section: Root Namespace">edit</a>]</span> <span class="mw-headline"> Root Namespace </span></h2>
+<p>When used with TAP the root element of an embedded YAMLish diagnostic is a hash containing keys from this set:
+</p>
+<dl><dt> message
+</dt><dd> A textual message giving more detail about the failure (or success)
+</dd><dt> severity
+</dt><dd> The severity of the problem.
+</dd><dt> source
+</dt><dd> A uri describing the source of the TAP.  This can be a file URL.  See "file" for a special case.
+</dd><dt> datetime
+</dt><dd> the time the test was executed, helping test runners do 
+interesting things like run tests in order of most-recently-failed.  
+ISO8601 or HTTP date format.
+</dd><dt> file
+</dt><dd> A filename representing the TAP source, really a special case 
+of "source".  Not possible for all TAP sources, but I really don't want 
+everyone to have to use file URIs.
+</dd><dt> line
+</dt><dd> The line number of the TAP source from which this test was produced.  Not possible for all TAP sources.
+</dd><dt> name
+</dt><dd> Name of this test, if any.
+</dd><dt> extensions
+</dt><dd> A place to put any non-standard keys without worrying out conflicting with future ones
+</dd><dt> actual
+</dt><dd> For comparison tests, what you got.
+</dd><dt> expected
+</dt><dd> For comparison tests, what you expected.
+</dd><dt> display
+</dt><dd> Suggested text to display representing this failure
+</dd><dt> dump
+</dt><dd> A hash of variables to be pretty-printed by the harness
+</dd><dt> error
+</dt><dd> An error or exception object
+</dd><dt> backtrace
+</dt><dd> A stack backtrace in the case of an error or exception
+</dd></dl>
+<p>(please feel free to add to this list - it's provisional at the moment)
+</p>
+<a name="Implementations"></a><h2><span class="editsection">[<a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit&amp;section=4" title="Edit section: Implementations">edit</a>]</span> <span class="mw-headline"> Implementations </span></h2>
+<p>Because YAMLish is a subset of YAML there are already a number of 
+parsers in a number of languages that accept it. It's also quite likely 
+that existing YAML producers can be coerced into producing YAMLish 
+compliant YAML. Please be careful though to ensure that your YAMLish 
+producer does in fact conform to the subset defined here. Just because 
+your YAML happens to work with a particular test harness doesn't mean 
+that it's valid YAMLish.
+</p><p>YAMLish is based on the subset of YAML supported by Adam Kennedy's <a href="http://search.cpan.org/dist/YAML-Tiny" class="external text" title="http://search.cpan.org/dist/YAML-Tiny" rel="nofollow">YAML::Tiny</a>
+ Perl module. YAML::Tiny doesn't support quoted hash keys - which we 
+need so that we can safely round-trip arbitrary data structures - so 
+YAMLish extends Adam's de-facto subset to include these.
+</p><p>If your concern is only to produce well formed TAP (rather than 
+parsing it) then you should find that it's possible to implement a 
+YAMLish writer in a couple of hundred lines of code.
+</p>
+<a name="Perl"></a><h3><span class="editsection">[<a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit&amp;section=5" title="Edit section: Perl">edit</a>]</span> <span class="mw-headline"> Perl </span></h3>
+<ul><li> <a href="http://testanything.org/wiki/index.php/TAP::Parser" title="TAP::Parser">TAP::Parser</a>
+ implements YAMLish support. You'll need the version from the subversion
+ repository though; YAMLish support hasn't yet made it to CPAN.
+</li><li> <a href="http://search.cpan.org/dist/Data-YAML" class="external text" title="http://search.cpan.org/dist/Data-YAML" rel="nofollow">Data::YAML</a> is essentially the YAMLish engine from TAP::Parser packaged as a standalone module
+</li></ul>
+<a name="PHP"></a><h3><span class="editsection">[<a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit&amp;section=6" title="Edit section: PHP">edit</a>]</span> <span class="mw-headline"> PHP </span></h3>
+<ul><li> <a href="http://testanything.org/ftp/yamlishwriter-php-v0.0.1.tar.gz" class="external text" title="http://testanything.org/ftp/yamlishwriter-php-v0.0.1.tar.gz" rel="nofollow">YAMLishWriter</a> is a simple PHP implementation of a YAMLish encoder
+</li></ul>
+<p>If you have a YAMLish implementation please list it here.
+</p>
+<a name="Q.26A"></a><h2><span class="editsection">[<a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit&amp;section=7" title="Edit section: Q&amp;A">edit</a>]</span> <span class="mw-headline"> Q&amp;A </span></h2>
+<a name="Why_YAML.3F"></a><h3><span class="editsection">[<a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit&amp;section=8" title="Edit section: Why YAML?">edit</a>]</span> <span class="mw-headline"> Why YAML? </span></h3>
+<p>TAP diagnostics require a way to represent data structions in any 
+language in a human and machine readable form.  It would be nice if we 
+didn't have to write our own format.  YAML, like TAP, is designed to be 
+both human and machine readable as well as language independent.  YAML <a href="http://portablegeneratorsforsale.net/" class="external text" title="http://portablegeneratorsforsale.net/" rel="nofollow">portable generators</a> and parsers already exist in many languages. <a href="http://portablesgenerators.com/" class="external text" title="http://portablesgenerators.com/" rel="nofollow">portable generators</a> YAML has already solved the hard problems facing a data serialization format (like character sets).
+</p>
+<a name="Why_not_JSON.3F"></a><h3><span class="editsection">[<a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit&amp;section=9" title="Edit section: Why not JSON?">edit</a>]</span> <span class="mw-headline"> Why not JSON? </span></h3>
+<p>JSON was considered, and it has some of the characteristics of YAML, but it was ultimately rejected for several reasons.
+</p><p>JSON is, effectively, a subset of YAML.  If your producer emits JSON then a YAML parser will read it.  The inverse is not true.
+</p><p>JSON is more verbose, less human readable, requiring more quoting.  For example:
+</p>
+<pre> # YAML
+ ---
+ got:      this
+ expected: that
+ ...
+ 
+ # JSON
+ {
+   "got":      "this"
+   "expected": "that"
+ }
+</pre>
+<p>JSON lacks a WYSIWYG multi-line scalar value format.  YAML has 
+several.  | allows the exact text to be presented, newlines and all.  
+&gt; "soft wraps" text to prevent long lines from spilling across the 
+screen.
+</p>
+<pre> # YAML
+ ---
+ got: &gt;
+    When in the course of human events,
+    blah blah blah
+ expected: &gt;
+    When, in the course of human events,
+    it becomes necessary for one people to
+    dissolve the political bonds which have 
+    connected them with another...
+ ...
+</pre>
+<pre> # JSON
+ {
+   "got":      "When in the course of human events, blah blah blah"
+   "expected": "When, in the course of human events, it becomes necessary for one people to dissolve the political bonds which have connected them with another..."
+ }
+</pre>
+<a name="Why_the_---_and_..._markers.3F"></a><h3><span class="editsection">[<a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit&amp;section=10" title="Edit section: Why the --- and ... markers?">edit</a>]</span> <span class="mw-headline"> Why the --- and ... markers? </span></h3>
+<p>With the diagnostics indented to indicate they're diagnostics, why 
+the --- and ... markers?  TAP producers tend to spit a lot of junk to 
+STDOUT, either explicitly as poorly written comments or accidentally 
+because the thing they're testing prints to STDOUT.  We don't want just 
+any old indented text to be parsed, so we put the --- and ... markers 
+around it.  The --- is there to indicate the start of a block.  The ... 
+is there to indicate it has ended so the parser does not have to wait 
+for the next test line (which could take a while) to know there's no 
+more diagnostics for the previous test forthcoming.
+</p>
+<!-- Saved in parser cache with key testanything:pcache:idhash:1384-0!1!0!!en!2 and timestamp 20120215030008 -->
+<div class="printfooter">
+Retrieved from "<a href="http://testanything.org/wiki/index.php/YAMLish">http://testanything.org/wiki/index.php/YAMLish</a>"</div>
+			<div id="catlinks"><p class="catlinks"><a href="http://testanything.org/wiki/index.php/Special:Categories" title="Special:Categories">Categories</a>: <span dir="ltr"><a href="http://testanything.org/wiki/index.php?title=Category:Proposals&amp;action=edit" class="new" title="Category:Proposals">Proposals</a></span> | <span dir="ltr"><a href="http://testanything.org/wiki/index.php?title=Category:YAMLish&amp;action=edit" class="new" title="Category:YAMLish">YAMLish</a></span></p></div>			<!-- end content -->
+			<div class="visualClear"></div>
+		</div>
+	</div>
+		</div>
+		<div id="column-one">
+	<div id="p-cactions" class="portlet">
+		<h5>Views</h5>
+		<div class="pBody">
+			<ul>
+					 <li id="ca-nstab-main" class="selected"><a href="http://testanything.org/wiki/index.php/YAMLish" title="View the content page [c]" accesskey="c">Article</a></li>
+					 <li id="ca-talk"><a href="http://testanything.org/wiki/index.php/Talk:YAMLish" title="Discussion about the content page [t]" accesskey="t">Discussion</a></li>
+					 <li id="ca-edit"><a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=edit" title="You can edit this page. Please use the preview button before saving. [e]" accesskey="e">Edit</a></li>
+					 <li id="ca-history"><a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;action=history" title="Past versions of this page. [h]" accesskey="h">History</a></li>
+				</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-personal">
+		<h5>Personal tools</h5>
+		<div class="pBody">
+			<ul>
+				<li id="pt-login"><a href="http://testanything.org/wiki/index.php?title=Special:Userlogin&amp;returnto=YAMLish" title="You are encouraged to log in, it is not mandatory however. [o]" accesskey="o">Log in / create account</a></li>
+			</ul>
+		</div>
+	</div>
+	<div class="portlet" id="p-logo">
+		<a style="background-image: url(&quot;/i/tap.png&quot;);" href="http://testanything.org/wiki/index.php/Main_Page" title="Visit the Main Page [z]" accesskey="z"></a>
+	</div>
+	<script type="text/javascript"> if (window.isMSIE55) fixalpha(); </script>
+		<div class="portlet" id="p-navigation">
+		<h5>Navigation</h5>
+		<div class="pBody">
+			<ul>
+				<li id="n-mainpage"><a href="http://testanything.org/wiki/index.php/Main_Page" title="Visit the Main Page [z]" accesskey="z">Main Page</a></li>
+				<li id="n-portal"><a href="http://testanything.org/wiki/index.php/Test_Anything_Protocol:Community_Portal" title="About the project, what you can do, where to find things">Community portal</a></li>
+				<li id="n-currentevents"><a href="http://testanything.org/wiki/index.php/Current_events" title="Find background information on current events">Current events</a></li>
+				<li id="n-recentchanges"><a href="http://testanything.org/wiki/index.php/Special:Recentchanges" title="The list of recent changes in the wiki. [r]" accesskey="r">Recent changes</a></li>
+				<li id="n-randompage"><a href="http://testanything.org/wiki/index.php/Special:Random" title="Load a random page [x]" accesskey="x">Random page</a></li>
+				<li id="n-help"><a href="http://testanything.org/wiki/index.php/Help:Contents" title="The place to find out.">Help</a></li>
+			</ul>
+		</div>
+	</div>
+		<div id="p-search" class="portlet">
+		<h5><label for="searchInput">Search</label></h5>
+		<div id="searchBody" class="pBody">
+			<form action="/wiki/index.php/Special:Search" id="searchform"><div>
+				<input id="searchInput" name="search" title="Search Test Anything Protocol [f]" accesskey="f" type="text">
+				<input name="go" class="searchButton" id="searchGoButton" value="Go" type="submit">&nbsp;
+				<input name="fulltext" class="searchButton" id="mw-searchButton" value="Search" type="submit">
+			</div></form>
+		</div>
+	</div>
+	<div class="portlet" id="p-tb">
+		<h5>Toolbox</h5>
+		<div class="pBody">
+			<ul>
+				<li id="t-whatlinkshere"><a href="http://testanything.org/wiki/index.php/Special:Whatlinkshere/YAMLish" title="List of all wiki pages that link here [j]" accesskey="j">What links here</a></li>
+				<li id="t-recentchangeslinked"><a href="http://testanything.org/wiki/index.php/Special:Recentchangeslinked/YAMLish" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li>
+<li id="t-specialpages"><a href="http://testanything.org/wiki/index.php/Special:Specialpages" title="List of all special pages [q]" accesskey="q">Special pages</a></li>
+				<li id="t-print"><a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;printable=yes">Printable version</a></li>				<li id="t-permalink"><a href="http://testanything.org/wiki/index.php?title=YAMLish&amp;oldid=2084">Permanent link</a></li>			</ul>
+		</div>
+	</div>
+		</div><!-- end of the left (by default at least) column -->
+			<div class="visualClear"></div>
+			<div id="footer">
+				<div id="f-poweredbyico"><a href="http://www.mediawiki.org/"><img src="YAMLish_files/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki"></a></div>
+				<div id="f-copyrightico"><a href="http://www.gnu.org/copyleft/fdl.html"><img src="YAMLish_files/gnu-fdl.png" alt="GNU Free Documentation License 1.2"></a></div>
+			<ul id="f-list">
+				<li id="lastmod"> This page was last modified 19:32, 8 December 2010.</li>
+				<li id="viewcount">This page has been accessed 16,053 times.</li>
+				<li id="copyright">Content is available under <a href="http://www.gnu.org/copyleft/fdl.html" class="external " title="http://www.gnu.org/copyleft/fdl.html" rel="nofollow">GNU Free Documentation License 1.2</a>.</li>
+				<li id="privacy"><a href="http://testanything.org/wiki/index.php/Test_Anything_Protocol:Privacy_policy" title="Test Anything Protocol:Privacy policy">Privacy policy</a></li>
+				<li id="about"><a href="http://testanything.org/wiki/index.php/Test_Anything_Protocol:About" title="Test Anything Protocol:About">About Test Anything Protocol</a></li>
+				<li id="disclaimer"><a href="http://testanything.org/wiki/index.php/Test_Anything_Protocol:General_disclaimer" title="Test Anything Protocol:General disclaimer">Disclaimers</a></li>
+			</ul>
+		</div>
+		
+	
+		<script type="text/javascript">if (window.runOnloadHook) runOnloadHook();</script>
+</div>
+<!-- Served by eric.hexten.net in 0.184 secs. -->
+</body></html>
