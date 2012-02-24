@@ -1,3 +1,6 @@
 [submodule "yamlish.js"]
 	path = yamlish.js
 	url = git://github.com/isaacs/yamlish.git
+[submodule "Data--YAML"]
+	path = Data--YAML
+	url = git://github.com/AndyA/Data--YAML.git
