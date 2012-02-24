@@ -4,3 +4,6 @@
 [submodule "Data--YAML"]
 	path = Data--YAML
 	url = git://github.com/AndyA/Data--YAML.git
+[submodule "pyyaml"]
+	path = pyyaml
+	url = git@gitorious.org:yamlish/pyyaml.git
