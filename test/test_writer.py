@@ -146,14 +146,14 @@ class TestWriter(unittest.TestCase):
             name = test['name']
             data = test['in']
 
-            got = []
+            got = ""
             # We currently don't throw any exceptions in Writer, so this
             # this is always false
             if 'error' in test:
-                self.assertRaises(test['error'], yamlish.write, test['in'])
+                self.assertRaises(test['error'], yamlish.dumps, test['in'])
             else:
                 want = test['out']
-                yamlish.write(test['in'], got)
+                yamlish.dump(test['in'], got)
                 self.assertEqual(got, want, """%s: Result matches
                     expected = %s
                     

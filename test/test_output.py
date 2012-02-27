@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
+"""
+Test general output functionality.
+
+Without much stress on the format itself.
+"""
 from __future__ import absolute_import, print_function, unicode_literals
+from StringIO import StringIO
 import re
 import unittest
 import yamlish
-import yaml
 
 OUT = [
   "---",
@@ -89,15 +94,40 @@ destination = [
 ]
 
 class TestOuptut(unittest.TestCase):
-    def test_output(self):
-        for dest in destination:
-            name = dest['name']
+    def setUp(self):
+        """
+        Transform expected list into string which we actually use.
+        """
+        self._expected = ""
+        for line in OUT:
+            self._expected += "%s\n" % line
 
-            yaml.dump(IN, dest)
-            got = dest['normalise']()
 
-            self.assertEqual(got, OUT, """%s: Result matches
+    def test_file_output(self):
+        """
+        Test output to a file.
+        """
+        outf = StringIO()
+        yamlish.dump(IN, outf)
+        outf.seek(0)
+        got = outf.read()
+        outf.close()
+        self.assertEqual(got, self._expected, """Result matches
+              expected = %s
+
+              observed = %s
+              """ % (self._expected, got))
+
+    def test_string_output(self):
+        """
+        Test output to a string.
+        """
+        got = yamlish.dumps(IN)
+        self.assertEqual(got, self._expected, """Result matches
               expected = %s
               
               observed = %s
-              """ % (name, OUT, got))
+              """ % (self._expected, got))
+
+if __name__ == "__main__":
+    unittest.main()

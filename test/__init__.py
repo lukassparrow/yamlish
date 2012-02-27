@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-  IGNORE:C0111
 from __future__ import absolute_import, print_function, unicode_literals
 import logging
 from test import test_reader, test_input
@@ -7,25 +7,29 @@ import unittest
 import yaml
 logging.basicConfig(level=logging.DEBUG)
 
-def generate_test_name(source):
+def _generate_test_name(source):
+    """
+    Clean up human-friendly test name into a method name.
+    """
     out = source.replace(' ', '_').replace(':', '').lower()
     return "test_%s" % out
 
-def create_test(test_src, tested_function):
+def _create_test(test_src, tested_function):
+    """
+    Decorate tested function to be used as a method for TestCase.
+    """
     def do_test_expected(self):
-        #self.assertEqual(under_test(pair[0]), pair[1])
+        """
+        Execute a test by calling a tested_function on test_src data.
+        """
         if ('skip' in test_src) and test_src['skip']:
             logging.info("test_src skipped!")
             return
 
-        # rather keep original tests in lists even though we could
-        # do multiline strings 
-        source = "\n".join(test_src['in']) + "\n"
-        logging.debug("source = %s", source)
-
         got = ""
         if 'error' in test_src:
-            self.assertRaises(test_src['error'], tested_function, test_src['in'])
+            self.assertRaises(test_src['error'], tested_function,
+                              test_src['in'])
         else:
             want = test_src['out']
             got = tested_function(test_src['in'])
@@ -40,19 +44,22 @@ def create_test(test_src, tested_function):
 
 
 def generate_testsuite(test_data, test_case_shell, test_fce):
+    """
+    Generate tests from the test data, class to build upon and function to use for testing.
+    """
     for in_test in test_data:
         if ('skip' in in_test) and in_test['skip']:
             logging.info("test %s skipped!", in_test['name'])
             continue
-        name = generate_test_name(in_test['name'])
-        test_method = create_test (in_test, test_fce)
-        test_method.__name__ = str('test_%s' % name)
+        name = _generate_test_name(in_test['name'])
+        test_method = _create_test (in_test, test_fce)
+        test_method.__name__ = str('test_%s' % name)  # IGNORE:W0622
         setattr (test_case_shell, test_method.__name__, test_method)
 
-class TestInput(unittest.TestCase):
+class TestInput(unittest.TestCase):  # IGNORE:C0111
     pass
 
-class TestReader(unittest.TestCase):
+class TestReader(unittest.TestCase):  # IGNORE:C0111
     pass
 
 if __name__ == "__main__":

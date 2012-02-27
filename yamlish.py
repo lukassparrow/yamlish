@@ -1,12 +1,28 @@
 # -*- coding: utf-8 -*-
 """
-=head1 NAME
+Easy YAML serialisation compatible with TAP (http://testanything.org/) format.
+Copyright (C) 2012 Red Hat, Inc.
 
-Data::YAML - Easy YAML serialisation of Perl data structures
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+of the Software, and to permit persons to whom the Software is furnished to do
+so, subject to the following conditions:
 
-=head1 VERSION
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-This document describes Data::YAML version 0.0.6
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+----------------------------------
+
+Available on https://github.com/AndyA/Data--YAML
 
 =head1 DESCRIPTION
 
@@ -91,67 +107,28 @@ C<Data::YAML> useful.
 
 Read more about TAP and YAMLish here: L<http://testanything.org/wiki>
 
-=head1 BUGS AND LIMITATIONS
-
-No bugs have been reported.
-
-Please report any bugs or feature requests to
-C<data-yaml@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
-
-=head1 AUTHOR
-
-Andy Armstrong  C<< <andy@hexten.net> >>
-
-=head1 LICENCE AND COPYRIGHT
-
-Copyright (c) 2007, Andy Armstrong C<< <andy@hexten.net> >>. All rights reserved.
-
-This module is free software; you can redistribute it and/or
-modify it under the same terms as Perl itself. See L<perlartistic>.
-
-=head1 DISCLAIMER OF WARRANTY
-
-BECAUSE THIS SOFTWARE IS LICENSED FREE OF CHARGE, THERE IS NO WARRANTY
-FOR THE SOFTWARE, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN
-OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES
-PROVIDE THE SOFTWARE "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
-EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE
-ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE SOFTWARE IS WITH
-YOU. SHOULD THE SOFTWARE PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL
-NECESSARY SERVICING, REPAIR, OR CORRECTION.
-
-IN NO EVENT UNLESS REQUIRED BY APPLICABLE LAW OR AGREED TO IN WRITING
-WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY AND/OR
-REDISTRIBUTE THE SOFTWARE AS PERMITTED BY THE ABOVE LICENCE, BE
-LIABLE TO YOU FOR DAMAGES, INCLUDING ANY GENERAL, SPECIAL, INCIDENTAL,
-OR CONSEQUENTIAL DAMAGES ARISING OUT OF THE USE OR INABILITY TO USE
-THE SOFTWARE (INCLUDING BUT NOT LIMITED TO LOSS OF DATA OR DATA BEING
-RENDERED INACCURATE OR LOSSES SUSTAINED BY YOU OR THIRD PARTIES OR A
-FAILURE OF THE SOFTWARE TO OPERATE WITH ANY OTHER SOFTWARE), EVEN IF
-SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF
-SUCH DAMAGES.
 """
 
 import logging
 import yaml
 
 __version__ = "0.1"
+__author__ = "Matěj Cepl <mcepl_at_redhat_dot_com>"
 
-class YamlishLoader(yaml.reader.Reader, yaml.scanner.Scanner,
-            yaml.parser.Parser, yaml.composer.Composer,
-            yaml.constructor.SafeConstructor, yaml.resolver.Resolver):
+class _YamlishLoader(yaml.loader.SafeLoader):
+    """
+    Remove a datetime resolving.
+
+    YAMLish returns unchanged string.
+    """
     def __init__(self, stream):
-        yaml.reader.Reader.__init__(self, stream)
-        yaml.scanner.Scanner.__init__(self)
-        yaml.parser.Parser.__init__(self)
-        yaml.composer.Composer.__init__(self)
-        yaml.constructor.SafeConstructor.__init__(self)
-        yaml.resolver.Resolver.__init__(self)
+        yaml.loader.SafeLoader.__init__(self, stream)
 
     @classmethod
     def remove_implicit_resolver(cls, tag):
+        """
+        Remove an implicit resolver from a Loader class identified by its tag. 
+        """
         if not 'yaml_implicit_resolvers' in cls.__dict__:
             cls.yaml_implicit_resolvers = cls.yaml_implicit_resolvers.copy()
         for key in cls.yaml_implicit_resolvers:
@@ -162,28 +139,46 @@ class YamlishLoader(yaml.reader.Reader, yaml.scanner.Scanner,
             if len(resolvers_set) == 0:
                 del cls.yaml_implicit_resolvers[key]
 
-YamlishLoader.remove_implicit_resolver(u'tag:yaml.org,2002:timestamp')
+_YamlishLoader.remove_implicit_resolver(u'tag:yaml.org,2002:timestamp')
 
 def load(source):
+    """
+    Return object loaded from a YAML document in source.
+
+    Source is either a representation of the YAML document itself
+    or any document providing an iterator (that includes file, list, and
+    many others).
+    """
     out = None
     logging.debug("instr:\n%s", source)
     if isinstance(source, (str, unicode)):
-        out = yaml.load(source, Loader=YamlishLoader)
+        out = yaml.load(source, Loader=_YamlishLoader)
         logging.debug("out (string) = %s", out)
     elif hasattr(source, "__iter__"):
-        instr = "\n".join(source)
-        out = yaml.load(instr, Loader=YamlishLoader)
+        instr = ""
+        for line in source:
+            instr += line + '\n'
+        out = load(instr)
         logging.debug("out (iter) = %s", out)
     return out
 
 def dump(source, destination):
+    """
+    Store source in destination file.
+
+    Destination is either a file object or a string with a filename.
+    """
     if isinstance(destination, (str, unicode)):
         with open(destination, "w") as outf:
             dump(source, outf)
     elif isinstance(destination, file):
         yaml.dump(source, destination, canonical=False,
-                default_flow_style=False, default_style=False)
+                  allow_unicode=False,
+                  default_flow_style=False, default_style=False)
 
 def dumps(source):
-    return yaml.dump(source, canonical=False,
+    """
+    Return YAMLish string from given source.
+    """
+    return yaml.dump(source, canonical=False, allow_unicode=False,
                 default_flow_style=False, default_style=False)
