@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
+import test
+import unittest
+import yamlish
+
 test_data_list = [
     {
      "name": "Input test",
@@ -64,3 +68,10 @@ total: 4443.52
         }
      }
 ]
+
+class TestInput(unittest.TestCase):  # IGNORE:C0111
+    pass
+
+if __name__ == "__main__":
+    test.generate_testsuite(test_data_list, TestInput, yamlish.load)
+    unittest.main()

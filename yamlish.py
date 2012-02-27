@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import absolute_import, print_function, unicode_literals
 """
 Easy YAML serialisation compatible with TAP (http://testanything.org/) format.
 Copyright (C) 2012 Red Hat, Inc.
@@ -150,15 +151,15 @@ def load(source):
     many others).
     """
     out = None
-    logging.debug("instr:\n%s", source)
+    logging.debug("inobj:\n%s", source)
     if isinstance(source, (str, unicode)):
         out = yaml.load(source, Loader=_YamlishLoader)
         logging.debug("out (string) = %s", out)
     elif hasattr(source, "__iter__"):
-        instr = ""
+        inobj = ""
         for line in source:
-            instr += line + '\n'
-        out = load(instr)
+            inobj += line + '\n'
+        out = load(inobj)
         logging.debug("out (iter) = %s", out)
     return out
 
@@ -172,13 +173,15 @@ def dump(source, destination):
         with open(destination, "w") as outf:
             dump(source, outf)
     elif isinstance(destination, file):
-        yaml.dump(source, destination, canonical=False,
-                  allow_unicode=False,
-                  default_flow_style=False, default_style=False)
+        yaml.dump(source, destination, encoding="utf-8",
+                  default_flow_style=False, canonical=False,
+                  Dumper=yaml.SafeDumper)
 
 def dumps(source):
     """
     Return YAMLish string from given source.
     """
-    return yaml.dump(source, canonical=False, allow_unicode=False,
-                default_flow_style=False, default_style=False)
+    return yaml.dump(source, encoding="utf-8",
+                     explicit_start=True, explicit_end=True,
+                     default_flow_style=False, default_style=False,
+                     canonical=False, Dumper=yaml.SafeDumper)

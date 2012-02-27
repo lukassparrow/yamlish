@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 import yaml
+import yamlish
+import test
+import unittest
 
 test_data_list = [
   {
@@ -39,7 +42,7 @@ test_data_list = [
   },
   {
     "name": 'Mixed array',
-    "in": [ '---', '- 1', "- 'two'", r'- "three\n"', '...', ],
+    "in": [ '---', '- 1', "- 'two'", '- "three\n"', '...', ],
     "out": [ 1, 'two', "three\n" ],
   },
   {
@@ -359,3 +362,10 @@ test_data_list = [
     },
   },
 ]
+
+class TestReader(unittest.TestCase):  # IGNORE:C0111
+    pass
+
+if __name__ == "__main__":
+    test.generate_testsuite(test_data_list, TestReader, yamlish.load)
+    unittest.main()

@@ -5,7 +5,7 @@ from test import test_reader, test_input
 import yamlish
 import unittest
 import yaml
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 def _generate_test_name(source):
     """
@@ -55,14 +55,3 @@ def generate_testsuite(test_data, test_case_shell, test_fce):
         test_method = _create_test (in_test, test_fce)
         test_method.__name__ = str('test_%s' % name)  # IGNORE:W0622
         setattr (test_case_shell, test_method.__name__, test_method)
-
-class TestInput(unittest.TestCase):  # IGNORE:C0111
-    pass
-
-class TestReader(unittest.TestCase):  # IGNORE:C0111
-    pass
-
-if __name__ == "__main__":
-    generate_testsuite(test_reader.test_data_list, TestReader, yamlish.load)
-    generate_testsuite(test_input.test_data_list, TestInput, yamlish.load)
-    unittest.main()
