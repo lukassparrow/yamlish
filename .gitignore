@@ -1,3 +1,5 @@
 *.py[ocw]
 *~
-pyyaml/upstream-repo/
+MANIFEST
+build/
+dist/

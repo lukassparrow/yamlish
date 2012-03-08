@@ -7,7 +7,6 @@ import yaml
 import tempfile
 import textwrap
 from textwrap import dedent
-logging.basicConfig(level=logging.INFO)
 
 INPUT = 1
 OUTPUT = 2
@@ -28,9 +27,6 @@ def _create_input_test(test_src, tested_function):
         Execute a test by calling a tested_function on test_src data.
         """
         self.maxDiff = None
-        if ('skip' in test_src) and test_src['skip']:
-            logging.info("test_src skipped!")
-            return
 
         got = ""
         if 'error' in test_src:
@@ -58,10 +54,6 @@ def _create_output_test(test_src, tested_function):
         Execute a test by calling a tested_function on test_src data.
         """
         self.maxDiff = None
-        if ('skip' in test_src) and test_src['skip']:
-            logging.info("test_src skipped!")
-            return
-
 
         # We currently don't throw any exceptions in Writer, so this
         # this is always false
@@ -89,7 +81,7 @@ def generate_testsuite(test_data, test_case_shell, test_fce, direction=INPUT):
     """
     for in_test in test_data:
         if ('skip' in in_test) and in_test['skip']:
-            logging.info("test %s skipped!", in_test['name'])
+            logging.debug("test %s skipped!", in_test['name'])
             continue
         name = _generate_test_name(in_test['name'])
         if direction == INPUT:

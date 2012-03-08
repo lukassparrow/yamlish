@@ -113,7 +113,7 @@ Read more about TAP and YAMLish here: L<http://testanything.org/wiki>
 import logging
 import yaml
 
-__version__ = "0.1"
+__version__ = "0.2"
 __author__ = "Matěj Cepl <mcepl_at_redhat_dot_com>"
 
 class _YamlishLoader(yaml.loader.SafeLoader):

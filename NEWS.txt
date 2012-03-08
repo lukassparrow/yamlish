@@ -1,0 +1,7 @@
+0.1 2012-03-08
+ * Initial version: tests succeed
+
+0.2 2012-03-08
+ * Just a packaging issue, don't play with strings too much in setup.py
+   version=yamlish.__version__ and that's it. No fancy formatting.
+   
