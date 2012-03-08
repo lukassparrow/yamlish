@@ -63,7 +63,7 @@ def _create_output_test(test_src, tested_function):
             logging.debug("out:\n%s", textwrap.dedent(test_src['out']))
             want = yaml.load(textwrap.dedent(test_src['out']))
             logging.debug("want:\n%s", want)
-            with tempfile.NamedTemporaryFile(delete=False) as test_file:
+            with tempfile.NamedTemporaryFile() as test_file:
                 tested_function(test_src['in'], test_file)
                 test_file.seek(0)
                 got_str = test_file.read()

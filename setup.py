@@ -1,10 +1,7 @@
 # coding: utf-8
 from __future__ import absolute_import, print_function, unicode_literals
 from distutils.core import setup, Command
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
+import unittest2 as unittest
 import os.path
 import yamlish
 
@@ -22,16 +19,13 @@ class RunTests(Command):
         pass
 
     def run(self):
-        loader = unittest.TestLoader()
-        loader.discover('.')
-        suite = loader.suiteClass()
-        result = unittest.TestResult()
-        suite.run(result)
+        tests = unittest.TestLoader().discover('.')
+        runner = unittest.TextTestRunner()
+        runner.run(tests)
 
 def read(fname):
     with open(os.path.join(os.path.dirname(__file__), fname)) as inf:
         return "\n" + inf.read().replace("\r\n", "\n")
-    # private
 
 def get_long_description():
     return read("README.txt") \
@@ -40,9 +34,9 @@ def get_long_description():
 
 setup(
     name='yamlish',
-    version=yamlish.__version__,
+    version=str(yamlish.__version__),
     description='Python implementation of YAMLish',
-    author='Matej Cepl',
+    author='Matěj Cepl',
     author_email='mcepl@redhat.com',
     url='https://gitorious.org/yamlish',
     py_modules=['yamlish'],

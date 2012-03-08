@@ -4,4 +4,7 @@
 0.2 2012-03-08
  * Just a packaging issue, don't play with strings too much in setup.py
    version=yamlish.__version__ and that's it. No fancy formatting.
-   
+
+0.3 2012-03-08
+ * Excuse me, son, but your tempfiles are leaking !!!
+ * Also fixing python setup.py test so that it actually does something.
