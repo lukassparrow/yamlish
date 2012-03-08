@@ -5,39 +5,39 @@ Test general output functionality.
 Without much stress on the format itself.
 """
 from __future__ import absolute_import, print_function, unicode_literals
-from StringIO import StringIO
-import re
-import unittest
+import unittest2 as unittest
 import yamlish
+import yaml
+import logging
+import tempfile
 
-OUT = [
-  "---",
-  "bill-to:",
-  "  address:",
-  "    city: 'Royal Oak'",
-  "    lines: \"458 Walkman Dr.\\nSuite #292\\n\"",
-  "    postal: 48046",
-  "    state: MI",
-  "  family: Dumars",
-  "  given: Chris",
-  "comments: \"Late afternoon is best. Backup contact is Nancy Billsmer \@ 338-4338\\n\"",
-  "date: 2001-01-23",
-  "invoice: 34843",
-  "product:",
-  "  -",
-  "    description: Basketball",
-  "    price: 450.00",
-  "    quantity: 4",
-  "    sku: BL394D",
-  "  -",
-  "    description: 'Super Hoop'",
-  "    price: 2392.00",
-  "    quantity: 1",
-  "    sku: BL4438H",
-  "tax: 251.42",
-  "total: 4443.52",
-  "...",
-]
+OUT = """---
+bill-to:
+  address:
+    city: Royal Oak
+    lines: "458 Walkman Dr.\\nSuite #292\\n"
+    postal: 48046
+    state: MI
+  family: Dumars
+  given: Chris
+comments: Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338
+date: 2001-01-23
+invoice: 34843
+product:
+  -
+    description: Basketball
+    price: 450.00
+    quantity: 4
+    sku: BL394D
+  -
+    description: Super Hoop
+    price: 2392.00
+    quantity: 1
+    sku: BL4438H
+tax: 251.42
+total: 4443.52
+...
+"""
 
 IN = {
   'bill-to': {
@@ -45,7 +45,7 @@ IN = {
     'address': {
       'city': 'Royal Oak',
       'postal': 48046,
-      'lines': "458 Walkman Dr.\\nSuite #292\\n",
+      'lines': "458 Walkman Dr.\nSuite #292\n",
       'state': 'MI'
     },
     'family': 'Dumars'
@@ -67,67 +67,39 @@ IN = {
       'description': 'Super Hoop'
     }
   ],
-  'comments': "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338\\n",
+  'comments': "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338",
   'total': 4443.52
 }
-
-buf1 = []
-buf2 = []
-buf3 = ""
-
-destination = [
-  {
-    "name": 'Array reference',
-    "destination": buf1,
-    "normalise": (lambda : buf1),
-  },
-#  {
-#    "name": 'Closure',
-#    "destination": sub { push @buf2, shift },
-#    "normalise": sub { return \@buf2 },
-#  },
-  {
-    "name": 'Scalar',
-    "destination": buf3,
-    "normalise": (lambda : re.split(r" \n ", buf3))
-  }
-]
 
 class TestOuptut(unittest.TestCase):
     def setUp(self):
         """
         Transform expected list into string which we actually use.
         """
-        self._expected = ""
-        for line in OUT:
-            self._expected += line + "\n"
+        self._expected = yaml.safe_load(OUT)
 
 
-    def notest_file_output(self):
+    def test_file_output(self):
         """
         Test output to a file.
         """
-        outf = StringIO()
-        yamlish.dump(IN, outf)
+        outf = tempfile.TemporaryFile()
+        yaml.safe_dump(IN, outf)
         outf.seek(0)
-        got = outf.read()
+        got_str = outf.read()
         outf.close()
-        self.assertEqual(got, self._expected, """Result matches
-              expected = %s
+        logging.debug("got_str = %s", got_str)
+        got = yaml.safe_load(got_str)
+        self.assertEqual(got, self._expected, "Result matches")
 
-              observed = %s
-              """ % (self._expected, got))
 
     def test_string_output(self):
         """
         Test output to a string.
         """
-        got = yamlish.dumps(IN)
-        self.assertEqual(got, self._expected, """Result matches
-        expected = %s
-        
-        observed = %s
-        """ % (self._expected, got))
+        got_str = yamlish.dumps(IN)
+        got = yaml.load(got_str)
+        self.assertEqual(got, self._expected, "Result matches")
 
 if __name__ == "__main__":
     unittest.main()

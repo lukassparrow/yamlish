@@ -172,10 +172,12 @@ def dump(source, destination):
     if isinstance(destination, (str, unicode)):
         with open(destination, "w") as outf:
             dump(source, outf)
-    elif isinstance(destination, file):
+    elif getattr(destination, "file"):
         yaml.dump(source, destination, encoding="utf-8",
                   default_flow_style=False, canonical=False,
                   Dumper=yaml.SafeDumper)
+    else:
+        raise NameError
 
 def dumps(source):
     """

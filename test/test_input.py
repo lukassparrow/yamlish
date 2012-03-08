@@ -1,22 +1,22 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, print_function, unicode_literals
 import test
-import unittest
+import unittest2 as unittest
 import yamlish
 
 test_data_list = [
     {
      "name": "Input test",
-     "in": """---
+     "in": r"""---
 bill-to:
   address:
     city: "Royal Oak"
-    lines: "458 Walkman Dr.\\nSuite #292\\n"
+    lines: "458 Walkman Dr.\nSuite #292\n"
     postal: 48046
     state: MI
   family: Dumars
   given: Chris
-comments: "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338\\n"
+comments: "Late afternoon is best. Backup contact is Nancy Billsmer @ 338-4338\n"
 date: 2001-01-23
 invoice: 34843
 product:
@@ -72,6 +72,7 @@ total: 4443.52
 class TestInput(unittest.TestCase):  # IGNORE:C0111
     pass
 
+test.generate_testsuite(test_data_list, TestInput, yamlish.load)
+
 if __name__ == "__main__":
-    test.generate_testsuite(test_data_list, TestInput, yamlish.load)
     unittest.main()
