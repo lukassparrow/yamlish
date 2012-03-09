@@ -45,6 +45,9 @@ setup(
     cmdclass={'test': RunTests},
     classifiers=[
         "Programming Language :: Python",
+        "Programming Language :: Python :: 2",
+        "Programming Language :: Python :: 2.6",
+        "Programming Language :: Python :: 2.7",
         "Development Status :: 4 - Beta",
         "Environment :: Console",
         "Intended Audience :: Information Technology",
@@ -52,6 +55,9 @@ setup(
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Text Processing :: Markup",
-        ]
+        ],
+    requires=[
+        "PyYAML (>=3.09)",
+        "unittest2"
+    ],
 )
-

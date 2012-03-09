@@ -8,3 +8,6 @@
 0.3 2012-03-08
  * Excuse me, son, but your tempfiles are leaking !!!
  * Also fixing python setup.py test so that it actually does something.
+
+0.4 2012-03-09
+ * Missing requires field in setup.py
