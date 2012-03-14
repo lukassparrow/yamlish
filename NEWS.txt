@@ -11,3 +11,6 @@
 
 0.4 2012-03-09
  * Missing requires field in setup.py
+
+0.5 2012-03-14
+ * Make the module documentation string at least a bit presentable.

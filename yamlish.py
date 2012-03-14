@@ -1,52 +1,39 @@
 # -*- coding: utf-8 -*-
-from __future__ import absolute_import, print_function, unicode_literals
+#Copyright (C) 2012 Red Hat, Inc.
+#
+#Permission is hereby granted, free of charge, to any person obtaining a copy of
+#this software and associated documentation files (the "Software"), to deal in
+#the Software without restriction, including without limitation the rights to
+#use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+#of the Software, and to permit persons to whom the Software is furnished to do
+#so, subject to the following conditions:
+#
+#The above copyright notice and this permission notice shall be included in all
+#copies or substantial portions of the Software.
+#
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#SOFTWARE.
 """
-Easy YAML serialisation compatible with TAP (http://testanything.org/) format.
-Copyright (C) 2012 Red Hat, Inc.
+Easy YAML serialisation compatible with TAP format.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions:
+Port of `Data::YAML Perl module <https://github.com/AndyA/Data--YAML>`,
+satisfying all its tests, intended to be used for support of
+`TAP <http://testanything.org/>` data format. Port of the original
+documentation follows. 
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The syntax accepted by this module is a subset of `YAML <http://yaml.org>`.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-----------------------------------
+===========
+YAML syntax
+===========
 
-Available on https://github.com/AndyA/Data--YAML
-
-=head1 DESCRIPTION
-
-In the spirit of L<YAML::Tiny>, L<Data::YAML::Reader> and
-L<Data::YAML::Writer> provide lightweight, dependency-free YAML
-handling. While C<YAML::Tiny> is designed principally for working with
-configuration files C<Data::YAML> concentrates on the transparent round-
-tripping of YAML serialized Perl data structures.
-
-As an example of why this distinction matters consider that
-C<YAML::Tiny> doesn't handle hashes with keys containing non-printable
-characters. This is fine for configuration files but likely to cause
-problems when handling arbitrary Perl data structures. C<Data::YAML>
-handles exotic hash keys correctly.
-
-The syntax accepted by C<Data::YAML> is a subset of YAML. Specifically
-it is the same subset of YAML that L<Data::YAML::Writer> produces. See
-L<Data::YAML> for more information.
-
-=head2 YAML syntax
-
-Although YAML appears to be a simple language the entire YAML
-specification is huge. C<Data::YAML> implements a small subset of the
+Although YAML appears to be a simple language, the entire YAML
+specification is huge. This module implements a small subset of the
 complete syntax trading completeness for compactness and simplicity.
 This restricted syntax is known (to me at least) as 'YAMLish'.
 
@@ -55,16 +42,22 @@ These examples demonstrates the full range of supported syntax.
 All YAML documents must begin with '---' and end with a line
 containing '...'.
 
+::
+
     --- Simple scalar
     ...
 
 Unprintable characters are represented using standard escapes in double
 quoted strings.
 
-    --- "\t\x01\x02\n"
+::
+
+    --- "\\t\\x01\\x02\\n"
     ...
 
 Array and hashes are represented thusly
+
+::
 
     ---
       - "This"
@@ -80,6 +73,8 @@ Array and hashes are represented thusly
 
 Structures may nest arbitrarily
 
+::
+
     ---
       -
         name: 'Hash one'
@@ -91,30 +86,35 @@ Structures may nest arbitrarily
 
 Undef is a tilde
 
+::
+
     --- ~
     ...
 
-=head2 Uses
+====
+Uses
+====
 
-Use C<Data::YAML> may be used any time you need to freeze and thaw Perl
+This module may be used any time you need to freeze and thaw Python
 data structures into a human readable format. The output from
-C<Data::YAML::Writer> should be readable by any YAML parser.
+`yamlish.dump()` should be readable by any YAML parser.
 
-C<Data::YAML> was originally written to allow machine-readable
+The original Perl module was originally written to allow machine-readable
 diagnostic information to be passed from test scripts to
-L<TAP::Harness>. That means that if you're writing a testing system that
-needs to output TAP version 13 or later syntax you might find
-C<Data::YAML> useful.
+the Perl module `TAP::Harness`. That means that if you're writing
+a testing system that needs to output TAP version 13 or later
+syntax you might find this module useful.
 
-Read more about TAP and YAMLish here: L<http://testanything.org/wiki>
+Read more about TAP and YAMLish on `<http://testanything.org/wiki>`
 
 """
-
+from __future__ import absolute_import, print_function, unicode_literals
 import logging
 import yaml
 
-__version__ = "0.4"
-__author__ = "Matěj Cepl <mcepl_at_redhat_dot_com>"
+__docformat__ = 'reStructuredText'
+__version__ = "0.5"
+__author__ = "Matej Cepl <mcepl_at_redhat_dot_com>"
 
 class _YamlishLoader(yaml.loader.SafeLoader):
     """
