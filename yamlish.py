@@ -113,7 +113,7 @@ import logging
 import yaml
 
 __docformat__ = 'reStructuredText'
-__version__ = "0.5"
+__version__ = "0.6"
 __author__ = "Matej Cepl <mcepl_at_redhat_dot_com>"
 
 class _YamlishLoader(yaml.loader.SafeLoader):
