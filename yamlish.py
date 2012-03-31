@@ -113,7 +113,7 @@ import logging
 import yaml
 
 __docformat__ = 'reStructuredText'
-__version__ = "0.6"
+__version__ = "0.7"
 __author__ = "Matej Cepl <mcepl_at_redhat_dot_com>"
 
 class _YamlishLoader(yaml.loader.SafeLoader):
@@ -141,6 +141,20 @@ class _YamlishLoader(yaml.loader.SafeLoader):
                 del cls.yaml_implicit_resolvers[key]
 
 _YamlishLoader.remove_implicit_resolver(u'tag:yaml.org,2002:timestamp')
+
+class _YamlishDumper(yaml.dumper.SafeDumper):
+    pass
+
+def str_representer_compact_multiline(dumper, data):
+    style = None
+    if '\n' in data:
+        style = '|'
+    data = data.decode('utf-8') # assumes all your strings are UTF-8 encoded
+    tag = u'tag:yaml.org,2002:str'
+    return dumper.represent_scalar(tag, data, style)
+
+yaml.add_representer(str, str_representer_compact_multiline,
+                     Dumper=_YamlishDumper)
 
 def load(source):
     """
@@ -172,10 +186,10 @@ def dump(source, destination):
     if isinstance(destination, (str, unicode)):
         with open(destination, "w") as outf:
             dump(source, outf)
-    elif getattr(destination, "file"):
+    elif hasattr(destination, "fileno"):
         yaml.dump(source, destination, encoding="utf-8",
                   default_flow_style=False, canonical=False,
-                  Dumper=yaml.SafeDumper)
+                  Dumper=_YamlishDumper)
     else:
         raise NameError
 
@@ -186,4 +200,4 @@ def dumps(source):
     return yaml.dump(source, encoding="utf-8",
                      explicit_start=True, explicit_end=True,
                      default_flow_style=False, default_style=False,
-                     canonical=False, Dumper=yaml.SafeDumper)
+                     canonical=False, Dumper=_YamlishDumper)

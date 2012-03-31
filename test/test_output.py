@@ -84,7 +84,7 @@ class TestOuptut(unittest.TestCase):
         Test output to a file.
         """
         outf = tempfile.TemporaryFile()
-        yaml.safe_dump(IN, outf)
+        yamlish.dump(IN, outf)
         outf.seek(0)
         got_str = outf.read()
         outf.close()
