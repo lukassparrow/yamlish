@@ -27,11 +27,6 @@ def read(fname):
     with open(os.path.join(os.path.dirname(__file__), fname)) as inf:
         return "\n" + inf.read().replace("\r\n", "\n")
 
-def get_long_description():
-    return read("README.txt") \
-        + "\nChangelog:\n" + "=" * 10 + "\n" \
-        + read("NEWS.txt")
-
 setup(
     name='yamlish',
     version=str(yamlish.__version__),
@@ -40,7 +35,7 @@ setup(
     author_email='mcepl@redhat.com',
     url='https://gitorious.org/yamlish',
     py_modules=['yamlish'],
-    long_description=get_long_description(),
+    long_description=read("README.txt"),
     keywords=['TAP', 'YAML', 'yamlish'],
     cmdclass={'test': RunTests},
     classifiers=[
