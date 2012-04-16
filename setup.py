@@ -1,7 +1,17 @@
 # coding: utf-8
-from __future__ import absolute_import, print_function, unicode_literals
+from __future__ import absolute_import, print_function
 from distutils.core import setup, Command
-import unittest2 as unittest
+import sys
+requires_list = [
+        "PyYAML (>=3.09)"
+    ]
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
+else:
+    if sys.version_info <= (2 , 6):
+        requires_list.append("unittest2")
 import os.path
 import yamlish
 
@@ -51,8 +61,5 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Text Processing :: Markup",
         ],
-    requires=[
-        "PyYAML (>=3.09)",
-        "unittest2"
-    ],
+    requires=requires_list
 )

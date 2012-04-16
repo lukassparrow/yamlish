@@ -5,7 +5,10 @@ Test general output functionality.
 Without much stress on the format itself.
 """
 from __future__ import absolute_import, print_function, unicode_literals
-import unittest2 as unittest
+try:
+    import unittest2 as unittest
+except ImportError:
+    import unittest
 import yamlish
 import yaml
 import logging

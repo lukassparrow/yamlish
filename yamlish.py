@@ -113,8 +113,8 @@ import logging
 import yaml
 
 __docformat__ = 'reStructuredText'
-__version__ = "0.7"
-__author__ = "Matej Cepl <mcepl_at_redhat_dot_com>"
+__version__ = "0.9"
+__author__ = u"Matěj Cepl <mcepl_at_redhat_dot_com>"
 
 class _YamlishLoader(yaml.loader.SafeLoader):
     """
@@ -149,11 +149,14 @@ def str_representer_compact_multiline(dumper, data):
     style = None
     if '\n' in data:
         style = '|'
-    data = data.decode('utf-8') # assumes all your strings are UTF-8 encoded
+    if isinstance(data, str):
+        data = data.decode('utf-8') # assumes all your strings are UTF-8 encoded
     tag = u'tag:yaml.org,2002:str'
     return dumper.represent_scalar(tag, data, style)
 
 yaml.add_representer(str, str_representer_compact_multiline,
+                     Dumper=_YamlishDumper)
+yaml.add_representer(unicode, str_representer_compact_multiline,
                      Dumper=_YamlishDumper)
 
 def load(source):
