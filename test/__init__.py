@@ -41,7 +41,7 @@ def _create_input_test(test_src, tested_function):
             logging.debug("test_src['out'] = %s", unicode(test_src['out']))
             self.assertEqual(got, want, """Result matches
             expected = %s
-            
+
             observed = %s
             """ % (want, got))
 

@@ -43,7 +43,7 @@ setup(
     description='Python implementation of YAMLish',
     author='Matěj Cepl',
     author_email='mcepl@redhat.com',
-    url='https://gitorious.org/yamlish',
+    url='http://luther.ceplovi.cz/git/?p=yamlish.git;a=summary',
     py_modules=['yamlish'],
     long_description=read("README.txt"),
     keywords=['TAP', 'YAML', 'yamlish'],

@@ -24,7 +24,7 @@ Easy YAML serialisation compatible with TAP format.
 Port of `Data::YAML Perl module <https://github.com/AndyA/Data--YAML>`,
 satisfying all its tests, intended to be used for support of
 `TAP <http://testanything.org/>` data format. Port of the original
-documentation follows. 
+documentation follows.
 
 The syntax accepted by this module is a subset of `YAML <http://yaml.org>`.
 
@@ -37,7 +37,7 @@ specification is huge. This module implements a small subset of the
 complete syntax trading completeness for compactness and simplicity.
 This restricted syntax is known (to me at least) as 'YAMLish'.
 
-These examples demonstrates the full range of supported syntax. 
+These examples demonstrates the full range of supported syntax.
 
 All YAML documents must begin with '---' and end with a line
 containing '...'.
@@ -113,7 +113,7 @@ import logging
 import yaml
 
 __docformat__ = 'reStructuredText'
-__version__ = "0.9"
+__version__ = "0.10"
 __author__ = u"Matěj Cepl <mcepl_at_redhat_dot_com>"
 
 class _YamlishLoader(yaml.loader.SafeLoader):
@@ -128,7 +128,7 @@ class _YamlishLoader(yaml.loader.SafeLoader):
     @classmethod
     def remove_implicit_resolver(cls, tag):
         """
-        Remove an implicit resolver from a Loader class identified by its tag. 
+        Remove an implicit resolver from a Loader class identified by its tag.
         """
         if not 'yaml_implicit_resolvers' in cls.__dict__:
             cls.yaml_implicit_resolvers = cls.yaml_implicit_resolvers.copy()
