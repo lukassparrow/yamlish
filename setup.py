@@ -1,37 +1,10 @@
 # coding: utf-8
-from __future__ import absolute_import, print_function
-from distutils.core import setup, Command
+from setuptools import setup, Command
 import sys
 requires_list = [
-        "PyYAML (>=3.09)"
+        "PyYAML>=3.09"
     ]
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
-else:
-    if sys.version_info <= (2 , 6):
-        requires_list.append("unittest2")
 import os.path
-import yamlish
-
-class RunTests(Command):
-    """New setup.py command to run all tests for the package.
-    """
-    description = "run all tests for the package"
-
-    user_options = []
-
-    def initialize_options(self):
-        pass
-
-    def finalize_options(self):
-        pass
-
-    def run(self):
-        tests = unittest.TestLoader().discover('.')
-        runner = unittest.TextTestRunner()
-        runner.run(tests)
 
 def read(fname):
     with open(os.path.join(os.path.dirname(__file__), fname)) as inf:
@@ -39,7 +12,7 @@ def read(fname):
 
 setup(
     name='yamlish',
-    version=str(yamlish.__version__),
+    version="0.10",
     description='Python implementation of YAMLish',
     author='Matěj Cepl',
     author_email='mcepl@redhat.com',
@@ -47,7 +20,6 @@ setup(
     py_modules=['yamlish'],
     long_description=read("README.txt"),
     keywords=['TAP', 'YAML', 'yamlish'],
-    cmdclass={'test': RunTests},
     classifiers=[
         "Programming Language :: Python",
         "Programming Language :: Python :: 2",
@@ -61,5 +33,6 @@ setup(
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Text Processing :: Markup",
         ],
-    requires=requires_list
+    test_suite="test",
+    install_requires=requires_list
 )
