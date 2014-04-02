@@ -1,10 +1,10 @@
 # coding: utf-8
-from setuptools import setup, Command
-import sys
+from setuptools import setup
 requires_list = [
-        "PyYAML>=3.09"
-    ]
+    "PyYAML>=3.09"
+]
 import os.path
+
 
 def read(fname):
     with open(os.path.join(os.path.dirname(__file__), fname)) as inf:
@@ -12,7 +12,7 @@ def read(fname):
 
 setup(
     name='yamlish',
-    version="0.10",
+    version="0.11",
     description='Python implementation of YAMLish',
     author='Matěj Cepl',
     author_email='mcepl@redhat.com',
@@ -25,14 +25,14 @@ setup(
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
         "Intended Audience :: Information Technology",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Text Processing :: Markup",
-        ],
+    ],
     test_suite="test",
     install_requires=requires_list
 )
