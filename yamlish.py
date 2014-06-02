@@ -112,6 +112,14 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 import yaml
 
+
+class NullHandler(logging.Handler):
+    def emit(self, record):
+        pass
+
+log = logging.getLogger("bayeux")
+log.addHandler(NullHandler())
+
 __docformat__ = 'reStructuredText'
 __version__ = "0.10"
 __author__ = u"Matěj Cepl <mcepl_at_redhat_dot_com>"
@@ -168,16 +176,16 @@ def load(source):
     many others).
     """
     out = None
-    logging.debug("inobj:\n%s", source)
+    log.debug("inobj:\n%s", source)
     if isinstance(source, (str, unicode)):
         out = yaml.load(source, Loader=_YamlishLoader)
-        logging.debug("out (string) = %s", out)
+        log.debug("out (string) = %s", out)
     elif hasattr(source, "__iter__"):
         inobj = ""
         for line in source:
             inobj += line + '\n'
         out = load(inobj)
-        logging.debug("out (iter) = %s", out)
+        log.debug("out (iter) = %s", out)
     return out
 
 def dump(source, destination):
