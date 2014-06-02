@@ -2,17 +2,13 @@
 from __future__ import absolute_import, print_function, unicode_literals
 import logging
 import yamlish
-try:
-    import unittest2 as unittest
-except ImportError:
-    import unittest
 import yaml
 import tempfile
 import textwrap
-from textwrap import dedent
 
 INPUT = 1
 OUTPUT = 2
+
 
 def _generate_test_name(source):
     """
@@ -20,6 +16,7 @@ def _generate_test_name(source):
     """
     out = source.replace(' ', '_').replace(':', '').replace(',', '').lower()
     return "test_%s" % out
+
 
 def _create_input_test(test_src, tested_function):
     """
@@ -77,10 +74,10 @@ def _create_output_test(test_src, tested_function):
     return do_test_expected
 
 
-
 def generate_testsuite(test_data, test_case_shell, test_fce, direction=INPUT):
     """
-    Generate tests from the test data, class to build upon and function to use for testing.
+    Generate tests from the test data, class to build upon and function
+    to use for testing.
     """
     for in_test in test_data:
         if ('skip' in in_test) and in_test['skip']:
@@ -88,8 +85,8 @@ def generate_testsuite(test_data, test_case_shell, test_fce, direction=INPUT):
             continue
         name = _generate_test_name(in_test['name'])
         if direction == INPUT:
-            test_method = _create_input_test (in_test, test_fce)
+            test_method = _create_input_test(in_test, test_fce)
         elif direction == OUTPUT:
             test_method = _create_output_test(in_test, test_fce)
-        test_method.__name__ = str('test_%s' % name)  # IGNORE:W0622
-        setattr (test_case_shell, test_method.__name__, test_method)
+        test_method.__name__ = str('test_%s' % name)
+        setattr(test_case_shell, test_method.__name__, test_method)
