@@ -18,7 +18,7 @@ setup(
     author_email='mcepl@redhat.com',
     url='http://luther.ceplovi.cz/git/?p=yamlish.git;a=summary',
     py_modules=['yamlish'],
-    long_description=read("README.txt"),
+    long_description=read("README.rst"),
     keywords=['TAP', 'YAML', 'yamlish'],
     classifiers=[
         "Programming Language :: Python",
