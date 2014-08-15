@@ -155,10 +155,10 @@ class _YamlishDumper(yaml.dumper.SafeDumper):
 
 def str_representer_compact_multiline(dumper, data):
     style = None
-    if '\n' in data:
-        style = '|'
     if isinstance(data, str):
         data = data.decode('utf-8') # assumes all your strings are UTF-8 encoded
+    if '\n' in data:
+        style = '|'
     tag = u'tag:yaml.org,2002:str'
     return dumper.represent_scalar(tag, data, style)
 
