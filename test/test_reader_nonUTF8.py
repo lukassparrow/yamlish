@@ -6,16 +6,18 @@ import unittest
 
 test_data_list = [{
     "name": 'Non UTF8 test',
-    "in": ['--- \xbd\xd0\xe1 \xd1\xeb\xdb\xde \xdc\xdd\xde\xd3\xde' +
-           '\xdd\xd0 \xe7\xd5\xdb\xdd\xd5;\n', '...', ],
-    "out": "Нас было много на челне;",
+    "in": [b"--- macro `BR\xc3\xc2\xa0fbi' not defined",
+           '...', ],
+    "out": "macro `BR\xa0fbi' not defined",
 }]
 
+""
 
 class TestReader(unittest.TestCase):  # IGNORE:C0111
     pass
 
-test.generate_testsuite(test_data_list, TestReader, yamlish.load)
+test.generate_testsuite(test_data_list, TestReader, yamlish.load,
+                        options={'ignore_wrong_characters': True})
 
 if __name__ == "__main__":
     unittest.main()

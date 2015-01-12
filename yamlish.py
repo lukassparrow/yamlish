@@ -117,8 +117,9 @@ class NullHandler(logging.Handler):
     def emit(self, record):
         pass
 
-log = logging.getLogger("bayeux")
+log = logging.getLogger("yamlish")
 log.addHandler(NullHandler())
+#log.setLevel(logging.DEBUG)
 
 __docformat__ = 'reStructuredText'
 __version__ = "0.10"
@@ -167,7 +168,7 @@ yaml.add_representer(str, str_representer_compact_multiline,
 yaml.add_representer(unicode, str_representer_compact_multiline,
                      Dumper=_YamlishDumper)
 
-def load(source):
+def load(source, ignore_wrong_characters=False):
     """
     Return object loaded from a YAML document in source.
 
@@ -176,16 +177,26 @@ def load(source):
     many others).
     """
     out = None
-    log.debug("inobj:\n%s", source)
+    log.debug("inobj: (%s)\n%s", type(source), source)
+    log.debug('before ignore_wrong_characters = %s', ignore_wrong_characters)
     if isinstance(source, (str, unicode)):
         out = yaml.load(source, Loader=_YamlishLoader)
         log.debug("out (string) = %s", out)
     elif hasattr(source, "__iter__"):
         inobj = ""
         for line in source:
-            inobj += line + '\n'
-        out = load(inobj)
+            try:
+                inobj += line + '\n'
+            except UnicodeDecodeError:
+                log.debug('in ignore_wrong_characters = %s', ignore_wrong_characters)
+                if ignore_wrong_characters:
+                    inobj += line.decode('utf8', errors='ignore') + '\n'
+                else:
+                    raise
+        log.debug('restarting load with inobj as string')
+        out = load(inobj, ignore_wrong_characters)
         log.debug("out (iter) = %s", out)
+        log.debug("out (iter) = type %s", type(out))
     return out
 
 def dump(source, destination):

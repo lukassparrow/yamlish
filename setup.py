@@ -12,7 +12,7 @@ def read(fname):
 
 setup(
     name='yamlish',
-    version="0.14",
+    version="0.15",
     description='Python implementation of YAMLish',
     author='Matěj Cepl',
     author_email='mcepl@redhat.com',

@@ -9,6 +9,7 @@ import textwrap
 INPUT = 1
 OUTPUT = 2
 
+#logging.basicConfig(level=logging.DEBUG)
 
 def _generate_test_name(source):
     """
@@ -18,7 +19,7 @@ def _generate_test_name(source):
     return "test_%s" % out
 
 
-def _create_input_test(test_src, tested_function):
+def _create_input_test(test_src, tested_function, options=None):
     """
     Decorate tested function to be used as a method for TestCase.
     """
@@ -31,10 +32,11 @@ def _create_input_test(test_src, tested_function):
         got = ""
         if 'error' in test_src:
             self.assertRaises(test_src['error'], tested_function,
-                              test_src['in'])
+                              test_src['in'], options)
         else:
             want = test_src['out']
-            got = tested_function(test_src['in'])
+            got = tested_function(test_src['in'], options)
+            logging.debug('got = type %s', type(got))
             logging.debug("test_src['out'] = %s", unicode(test_src['out']))
             self.assertEqual(got, want, """Result matches
             expected = %s
@@ -45,7 +47,7 @@ def _create_input_test(test_src, tested_function):
     return do_test_expected
 
 
-def _create_output_test(test_src, tested_function):
+def _create_output_test(test_src, tested_function, options=None):
     """
     Decorate tested function to be used as a method for TestCase.
     """
@@ -58,7 +60,7 @@ def _create_output_test(test_src, tested_function):
         # We currently don't throw any exceptions in Writer, so this
         # this is always false
         if 'error' in test_src:
-            self.assertRaises(test_src['error'], yamlish.dumps, test_src['in'])
+            self.assertRaises(test_src['error'], yamlish.dumps, test_src['in'], options)                
         else:
             logging.debug("out:\n%s", textwrap.dedent(test_src['out']))
             want = yaml.load(textwrap.dedent(test_src['out']))
@@ -74,7 +76,8 @@ def _create_output_test(test_src, tested_function):
     return do_test_expected
 
 
-def generate_testsuite(test_data, test_case_shell, test_fce, direction=INPUT):
+def generate_testsuite(test_data, test_case_shell, test_fce, direction=INPUT,
+                         options=None):
     """
     Generate tests from the test data, class to build upon and function
     to use for testing.
@@ -85,8 +88,8 @@ def generate_testsuite(test_data, test_case_shell, test_fce, direction=INPUT):
             continue
         name = _generate_test_name(in_test['name'])
         if direction == INPUT:
-            test_method = _create_input_test(in_test, test_fce)
+            test_method = _create_input_test(in_test, test_fce, options=options)
         elif direction == OUTPUT:
-            test_method = _create_output_test(in_test, test_fce)
+            test_method = _create_output_test(in_test, test_fce, options=options)
         test_method.__name__ = str('test_%s' % name)
         setattr(test_case_shell, test_method.__name__, test_method)
