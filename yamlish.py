@@ -190,7 +190,7 @@ def load(source, ignore_wrong_characters=False):
             except UnicodeDecodeError:
                 log.debug('in ignore_wrong_characters = %s', ignore_wrong_characters)
                 if ignore_wrong_characters:
-                    inobj += line.decode('utf8', errors='ignore') + '\n'
+                    inobj += line.decode('utf8', 'ignore') + '\n'
                 else:
                     raise
         log.debug('restarting load with inobj as string')
