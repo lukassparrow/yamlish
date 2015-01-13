@@ -9,7 +9,11 @@ import textwrap
 INPUT = 1
 OUTPUT = 2
 
+if yamlish.py3k:
+    unicode = str
+
 #logging.basicConfig(level=logging.DEBUG)
+
 
 def _generate_test_name(source):
     """
@@ -37,7 +41,8 @@ def _create_input_test(test_src, tested_function, options=None):
             want = test_src['out']
             got = tested_function(test_src['in'], options)
             logging.debug('got = type %s', type(got))
-            logging.debug("test_src['out'] = %s", unicode(test_src['out']))
+            logging.debug("test_src['out'] = %s",
+                          unicode(test_src['out']))
             self.assertEqual(got, want, """Result matches
             expected = %s
 
@@ -60,7 +65,8 @@ def _create_output_test(test_src, tested_function, options=None):
         # We currently don't throw any exceptions in Writer, so this
         # this is always false
         if 'error' in test_src:
-            self.assertRaises(test_src['error'], yamlish.dumps, test_src['in'], options)                
+            self.assertRaises(test_src['error'], yamlish.dumps,
+                              test_src['in'], options)
         else:
             logging.debug("out:\n%s", textwrap.dedent(test_src['out']))
             want = yaml.load(textwrap.dedent(test_src['out']))
@@ -77,7 +83,7 @@ def _create_output_test(test_src, tested_function, options=None):
 
 
 def generate_testsuite(test_data, test_case_shell, test_fce, direction=INPUT,
-                         options=None):
+                       options=None):
     """
     Generate tests from the test data, class to build upon and function
     to use for testing.
@@ -88,8 +94,10 @@ def generate_testsuite(test_data, test_case_shell, test_fce, direction=INPUT,
             continue
         name = _generate_test_name(in_test['name'])
         if direction == INPUT:
-            test_method = _create_input_test(in_test, test_fce, options=options)
+            test_method = _create_input_test(in_test, test_fce,
+                                             options=options)
         elif direction == OUTPUT:
-            test_method = _create_output_test(in_test, test_fce, options=options)
+            test_method = _create_output_test(in_test, test_fce,
+                                              options=options)
         test_method.__name__ = str('test_%s' % name)
         setattr(test_case_shell, test_method.__name__, test_method)

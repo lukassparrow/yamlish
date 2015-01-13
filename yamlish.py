@@ -1,23 +1,24 @@
 # -*- coding: utf-8 -*-
 #Copyright (C) 2012 Red Hat, Inc.
 #
-#Permission is hereby granted, free of charge, to any person obtaining a copy of
-#this software and associated documentation files (the "Software"), to deal in
-#the Software without restriction, including without limitation the rights to
-#use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-#of the Software, and to permit persons to whom the Software is furnished to do
-#so, subject to the following conditions:
+#Permission is hereby granted, free of charge, to any person obtaining
+#a copy of this software and associated documentation files (the
+#"Software"), to deal in the Software without restriction, including
+#without limitation the rights to use, copy, modify, merge, publish,
+#distribute, sublicense, and/or sell copies of the Software, and to
+#permit persons to whom the Software is furnished to do so, subject to
+#the following conditions:
 #
-#The above copyright notice and this permission notice shall be included in all
-#copies or substantial portions of the Software.
+#The above copyright notice and this permission notice shall be included
+#in all copies or substantial portions of the Software.
 #
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-#SOFTWARE.
+#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+#OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+#MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+#IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+#CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+#TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+#SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 Easy YAML serialisation compatible with TAP format.
 
@@ -111,6 +112,7 @@ Read more about TAP and YAMLish on `<http://testanything.org/wiki>`
 from __future__ import absolute_import, print_function, unicode_literals
 import logging
 import yaml
+import sys
 
 
 class NullHandler(logging.Handler):
@@ -124,6 +126,14 @@ log.addHandler(NullHandler())
 __docformat__ = 'reStructuredText'
 __version__ = "0.10"
 __author__ = u"Matěj Cepl <mcepl_at_redhat_dot_com>"
+
+py3k = sys.version_info[0] > 2
+
+try:
+    isinstance('a', basestring)
+except NameError:
+    basestring = (bytes, str)
+
 
 class _YamlishLoader(yaml.loader.SafeLoader):
     """
@@ -151,22 +161,32 @@ class _YamlishLoader(yaml.loader.SafeLoader):
 
 _YamlishLoader.remove_implicit_resolver(u'tag:yaml.org,2002:timestamp')
 
+
 class _YamlishDumper(yaml.dumper.SafeDumper):
     pass
 
+
 def str_representer_compact_multiline(dumper, data):
     style = None
-    if isinstance(data, str):
-        data = data.decode('utf-8') # assumes all your strings are UTF-8 encoded
+    if not py3k and isinstance(data, str):
+        # assumes all your strings are UTF-8 encoded
+        data = data.decode('utf-8')
     if '\n' in data:
         style = '|'
     tag = u'tag:yaml.org,2002:str'
     return dumper.represent_scalar(tag, data, style)
 
-yaml.add_representer(str, str_representer_compact_multiline,
-                     Dumper=_YamlishDumper)
-yaml.add_representer(unicode, str_representer_compact_multiline,
-                     Dumper=_YamlishDumper)
+if py3k:
+    yaml.add_representer(bytes, str_representer_compact_multiline,
+                         Dumper=_YamlishDumper)
+    yaml.add_representer(str, str_representer_compact_multiline,
+                         Dumper=_YamlishDumper)
+else:
+    yaml.add_representer(str, str_representer_compact_multiline,
+                         Dumper=_YamlishDumper)
+    yaml.add_representer(unicode, str_representer_compact_multiline,
+                         Dumper=_YamlishDumper)
+
 
 def load(source, ignore_wrong_characters=False):
     """
@@ -179,16 +199,21 @@ def load(source, ignore_wrong_characters=False):
     out = None
     log.debug("inobj: (%s)\n%s", type(source), source)
     log.debug('before ignore_wrong_characters = %s', ignore_wrong_characters)
-    if isinstance(source, (str, unicode)):
+    if isinstance(source, basestring):
         out = yaml.load(source, Loader=_YamlishLoader)
         log.debug("out (string) = %s", out)
     elif hasattr(source, "__iter__"):
-        inobj = ""
+        inobj = u""
         for line in source:
             try:
-                inobj += line + '\n'
+                if not py3k or isinstance(line, bytes):
+                    line = line.decode('utf8')
+                logging.debug('inobj, line ... %s, %s',
+                              type(inobj), type(line))
+                inobj += line + u'\n'
             except UnicodeDecodeError:
-                log.debug('in ignore_wrong_characters = %s', ignore_wrong_characters)
+                log.debug('in ignore_wrong_characters = %s',
+                          ignore_wrong_characters)
                 if ignore_wrong_characters:
                     inobj += line.decode('utf8', 'ignore') + '\n'
                 else:
@@ -199,13 +224,14 @@ def load(source, ignore_wrong_characters=False):
         log.debug("out (iter) = type %s", type(out))
     return out
 
+
 def dump(source, destination):
     """
     Store source in destination file.
 
     Destination is either a file object or a string with a filename.
     """
-    if isinstance(destination, (str, unicode)):
+    if isinstance(destination, basestring):
         with open(destination, "w") as outf:
             dump(source, outf)
     elif hasattr(destination, "fileno"):
@@ -214,6 +240,7 @@ def dump(source, destination):
                   Dumper=_YamlishDumper)
     else:
         raise NameError
+
 
 def dumps(source):
     """
