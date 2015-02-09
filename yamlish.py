@@ -246,7 +246,7 @@ def dumps(source):
     """
     Return YAMLish string from given source.
     """
-    return yaml.dump(source, encoding="utf-8",
+    return yaml.dump(source, encoding=None,
                      explicit_start=True, explicit_end=True,
                      default_flow_style=False, default_style=False,
                      canonical=False, Dumper=_YamlishDumper)
