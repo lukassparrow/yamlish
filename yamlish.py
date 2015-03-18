@@ -203,23 +203,23 @@ def load(source, ignore_wrong_characters=False):
         out = yaml.load(source, Loader=_YamlishLoader)
         log.debug("out (string) = %s", out)
     elif hasattr(source, "__iter__"):
-        inobj = u""
+        inobj = []
         for line in source:
             try:
                 if not py3k or isinstance(line, bytes):
                     line = line.decode('utf8')
                 logging.debug('inobj, line ... %s, %s',
                               type(inobj), type(line))
-                inobj += line + u'\n'
+                inobj.append(line)
             except UnicodeDecodeError:
                 log.debug('in ignore_wrong_characters = %s',
                           ignore_wrong_characters)
                 if ignore_wrong_characters:
-                    inobj += line.decode('utf8', 'ignore') + '\n'
+                    inobj.append(line.decode('utf8', 'ignore'))
                 else:
                     raise
         log.debug('restarting load with inobj as string')
-        out = load(inobj, ignore_wrong_characters)
+        out = load('\n'.join(inobj), ignore_wrong_characters)
         log.debug("out (iter) = %s", out)
         log.debug("out (iter) = type %s", type(out))
     return out
